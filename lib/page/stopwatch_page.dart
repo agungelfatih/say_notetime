@@ -55,85 +55,87 @@ class _StopwatchPageState extends State<StopwatchPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              StreamBuilder<int>(
-                stream: _stopWatchTimer.rawTime,
-                initialData: _stopWatchTimer.rawTime.value,
-                builder: (context, snapshot){
-                  final value = snapshot.data;
-                  final displayTime = StopWatchTimer.getDisplayTime(value!, hours: _isHours);
-                return Container(
-                  width:320,
-                  child: Text(
-                    displayTime,
-                    maxLines: 1,
-                    overflow: TextOverflow.visible,
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontFamily: 'Montserrat Bold',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                );
-                }
-              ),
-              SizedBox(height: 10,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  resetButton(),
-                  SizedBox(width: 10,),
-                  lapButton(),
-                  SizedBox(width: 10,),
-                  startPauseButton(),
-                ],
-              ),
-              Container(
-                height: 200,
-                child: StreamBuilder<List<StopWatchRecord>>(
-                  stream: _stopWatchTimer.records,
-                  initialData: _stopWatchTimer.records.value,
-                  builder: (context, snapshot) {
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                StreamBuilder<int>(
+                  stream: _stopWatchTimer.rawTime,
+                  initialData: _stopWatchTimer.rawTime.value,
+                  builder: (context, snapshot){
                     final value = snapshot.data;
-                    if (value!.isEmpty) {
-                      return Container();
-                    }
-                    Future.delayed(const Duration(milliseconds: 100), (){
-                      _scrollController.animateTo(
-                        _scrollController.position.maxScrollExtent,
-                        duration: Duration(milliseconds: 200),
-                        curve: Curves.easeOut
-                      );
-                    });
-                    return ListView.builder(
-                      controller: _scrollController,
-                      itemBuilder: (context, index) {
-                        final data = value[index];
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Text(
-                                '#${index + 1} - ${data.displayTime}',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
-                            const Divider(height: 2,)
-                          ],
-                        );
-
-                      },
-                      itemCount: value.length,
-                    );
-                  },
+                    final displayTime = StopWatchTimer.getDisplayTime(value!, hours: _isHours);
+                  return Container(
+                    width:320,
+                    child: Text(
+                      displayTime,
+                      maxLines: 1,
+                      overflow: TextOverflow.visible,
+                      style: TextStyle(
+                        fontSize: 50,
+                        fontFamily: 'Montserrat Bold',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                  }
                 ),
-              ),
-            ],
+                SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    resetButton(),
+                    SizedBox(width: 10,),
+                    lapButton(),
+                    SizedBox(width: 10,),
+                    startPauseButton(),
+                  ],
+                ),
+                Container(
+                  height: 200,
+                  child: StreamBuilder<List<StopWatchRecord>>(
+                    stream: _stopWatchTimer.records,
+                    initialData: _stopWatchTimer.records.value,
+                    builder: (context, snapshot) {
+                      final value = snapshot.data;
+                      if (value!.isEmpty) {
+                        return Container();
+                      }
+                      Future.delayed(const Duration(milliseconds: 100), (){
+                        _scrollController.animateTo(
+                          _scrollController.position.maxScrollExtent,
+                          duration: Duration(milliseconds: 200),
+                          curve: Curves.easeOut
+                        );
+                      });
+                      return ListView.builder(
+                        controller: _scrollController,
+                        itemBuilder: (context, index) {
+                          final data = value[index];
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  '#${index + 1} - ${data.displayTime}',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              const Divider(height: 2,)
+                            ],
+                          );
 
+                        },
+                        itemCount: value.length,
+                      );
+                    },
+                  ),
+                ),
+              ],
+
+            ),
           ),
         ),
       ),
